@@ -1,0 +1,8 @@
+.gradle/
+.git/
+.idea/
+.build/
+fanbox/
+.dockerignore
+Dockerfile
+kemono.mv.db
