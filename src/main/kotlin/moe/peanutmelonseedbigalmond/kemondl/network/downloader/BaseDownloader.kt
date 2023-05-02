@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
+import moe.peanutmelonseedbigalmond.kemondl.App
 import moe.peanutmelonseedbigalmond.kemondl.ConsoleLoggerFormatter
 import moe.peanutmelonseedbigalmond.kemondl.component.database.Database
 import moe.peanutmelonseedbigalmond.kemondl.component.database.bean.CompositePostId
@@ -70,13 +71,19 @@ abstract class BaseDownloader(
             it.write(gson.toJson(postContentResponse).toByteArray(Charset.defaultCharset()))
         }
 
+        val ariaDownloadBaseDir = App.config.aria2Config.downloadPath
+        val ariaDownloadDir = if (ariaDownloadBaseDir.isNullOrEmpty()) {
+            File(dirName)
+        }else{
+            File(ariaDownloadBaseDir,dirName)
+        }
         var error = false
         for (attachment in postContentResponse.attachments) {
             val uri = URI("${Api.BASE_IMAGE_URL}/${attachment.path}").normalize().toURL().toString()
             try {
                 val gid = Aria2ClientController.addUri(
                     uri = uri,
-                    dir = dir.canonicalPath,
+                    dir = ariaDownloadDir.canonicalPath,
                     filename = attachment.name,
                     options = mapOf(
                         "header" to listOf("Referer: ${Api.BASE_IMAGE_URL}"),
@@ -95,7 +102,7 @@ abstract class BaseDownloader(
             try {
                 Aria2ClientController.addUri(
                     uri = uri,
-                    dir = dir.canonicalPath,
+                    dir = ariaDownloadDir.canonicalPath,
                     filename = it.name,
                     options = mapOf(
                         "header" to listOf("Referer: ${Api.BASE_IMAGE_URL}"),
