@@ -74,8 +74,8 @@ abstract class BaseDownloader(
         val ariaDownloadBaseDir = App.config.aria2Config.downloadPath
         val ariaDownloadDir = if (ariaDownloadBaseDir.isNullOrEmpty()) {
             File(dirName)
-        }else{
-            File(ariaDownloadBaseDir,dirName)
+        } else {
+            File(ariaDownloadBaseDir, dirName)
         }
         var error = false
         for (attachment in postContentResponse.attachments) {
@@ -84,7 +84,7 @@ abstract class BaseDownloader(
                 val gid = Aria2ClientController.addUri(
                     uri = uri,
                     dir = ariaDownloadDir.canonicalPath,
-                    filename = attachment.name,
+                    filename = attachment.name!!,
                     options = mapOf(
                         "header" to listOf("Referer: ${Api.BASE_IMAGE_URL}"),
                     )
@@ -97,13 +97,13 @@ abstract class BaseDownloader(
             }
         }
 
-        postContentResponse.cover?.let {
+        postContentResponse.cover?.takeIf { it.name != null && it.path != null }?.let {
             val uri = URI("${Api.BASE_IMAGE_URL}/${it.path}").normalize().toURL().toString()
             try {
                 Aria2ClientController.addUri(
                     uri = uri,
                     dir = ariaDownloadDir.canonicalPath,
-                    filename = it.name,
+                    filename = it.name!!,
                     options = mapOf(
                         "header" to listOf("Referer: ${Api.BASE_IMAGE_URL}"),
                     )
@@ -134,19 +134,19 @@ abstract class BaseDownloader(
 
         val files = postContentResponse.attachments.map {
             return@map FileBean().apply {
-                path = it.path
-                name = it.name
+                path = it.path!!
+                name = it.name!!
                 type = "attachment"
                 this.post = post
             }
         }.toMutableList()
-        if (postContentResponse.cover != null) {
-            files += FileBean().apply {
+        if (postContentResponse.cover?.path!=null&&postContentResponse.cover.name!=null) {
+            files.add(FileBean().apply {
                 path = postContentResponse.cover.path
                 name = postContentResponse.cover.name
                 type = "cover"
                 this.post = post
-            }
+            })
         }
 
         post.files = files

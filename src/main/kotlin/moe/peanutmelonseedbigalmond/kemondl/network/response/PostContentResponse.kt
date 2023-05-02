@@ -25,7 +25,7 @@ data class PostContentResponse(
     val userId:String,
 ){
     data class AttachmentsBean(
-        val name:String,
-        val path:String,
+        val name:String?,
+        val path:String?,
     )
 }
