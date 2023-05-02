@@ -58,7 +58,7 @@ abstract class BaseDownloader(
             creators!!.first { it.id == postContentResponse.userId && it.service == postContentResponse.site }.name
 
         val dirName =
-            "${postContentResponse.site}/[${filterInvalidChars(username)}/${filterInvalidChars(postContentResponse.title)}"
+            "${postContentResponse.site}/${filterInvalidChars(username)}/${filterInvalidChars(postContentResponse.title)}"
         val dir = File(dirName)
         if (!dir.exists()) dir.mkdirs()
 
@@ -140,7 +140,7 @@ abstract class BaseDownloader(
                 this.post = post
             }
         }.toMutableList()
-        if (postContentResponse.cover?.path!=null&&postContentResponse.cover.name!=null) {
+        if (postContentResponse.cover?.path != null && postContentResponse.cover.name != null) {
             files.add(FileBean().apply {
                 path = postContentResponse.cover.path
                 name = postContentResponse.cover.name
@@ -169,7 +169,23 @@ abstract class BaseDownloader(
 
     private fun filterInvalidChars(fileName: String): String {
         val regex = Regex("[\\\\/:*?\"<>|]+")
-        return regex.replace(fileName, "_").trim()
+        return truncateFileName(regex.replace(fileName, "_").trim())
+    }
+
+    private fun truncateFileName(fileName: String): String = truncateString(fileName, 240)
+
+    private fun truncateString(str: String, length: Int): String {
+        if (str.isEmpty()) return ""
+        val bytes = str.toByteArray()
+        if (bytes.size > length) {
+            val tempLen = String(bytes, 0, length).length
+            var content = str.substring(0, tempLen)
+            if (content.toByteArray().size > length) {
+                content = content.substring(0, tempLen - 1)
+            }
+            return content
+        }
+        return str
     }
 
     companion object {
