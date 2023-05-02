@@ -11,6 +11,7 @@ RUN mkdir /kemono-dl && \
     tar xvf kemono-dl.tar -C /kemono-dl --strip-components 1 && \
     chmod +x /kemono-dl/bin/kemono-dl && \
     rm -rf kemono-dl.tar && \
+    sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
     apk add findutils --no-cache
 WORKDIR /app
 VOLUME /app
