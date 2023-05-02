@@ -53,7 +53,7 @@ object Aria2ClientController : Aria2Callback, Closeable {
 
     fun addUri(
         uri: String,
-        dir: String = System.getProperty("user.dir"),
+        dir: String = if (App.config.aria2Config.downloadPath.isNullOrBlank()) System.getProperty("user.dir") else App.config.aria2Config.downloadPath!!,
         filename: String = "",
         options: Map<String, Any> = mapOf(),
     ): String {

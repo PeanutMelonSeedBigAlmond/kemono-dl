@@ -30,6 +30,11 @@ sample:
     <aria2>
         <host>localhost</host>
         <port>6800</port>
+        <!-- aria2 auth token, default is empty -->
+        <token/>
+        
+        <!-- aria2 download base directory, default is same with the program work directory -->
+        <downloadPath/>
     </aria2>
 
     <download>

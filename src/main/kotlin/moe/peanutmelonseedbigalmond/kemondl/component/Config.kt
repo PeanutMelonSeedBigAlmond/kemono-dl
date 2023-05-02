@@ -17,6 +17,7 @@ class Config {
     class Aria2Config {
         lateinit var host: String
         lateinit var port: String
+        var downloadPath: String? = null
         var token: String? = null
     }
 
