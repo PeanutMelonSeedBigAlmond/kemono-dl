@@ -9,6 +9,8 @@ group = "moe.peanutmelonseedbigalmond.kemonodl"
 version = "1.0-SNAPSHOT"
 
 repositories {
+    maven("https://maven.aliyun.com/repository/public/")
+    mavenLocal()
     mavenCentral()
     maven("https://jitpack.io")
 }
