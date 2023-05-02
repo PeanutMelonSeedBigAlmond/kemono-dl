@@ -14,7 +14,7 @@ class PostBean {
     ])
     lateinit var key: CompositePostId
 
-    @Column(columnDefinition = "VARCHAR(65535)")
+    @Column(columnDefinition = "CLOB")
     lateinit var content: String
 
     @Column
