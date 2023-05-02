@@ -6,3 +6,4 @@ fanbox/
 .dockerignore
 Dockerfile
 kemono.mv.db
+docker-compose.yaml

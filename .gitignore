@@ -41,3 +41,4 @@ bin/
 config.xml
 fanbox/
 kemono.mv.db
+docker-compose.yaml
