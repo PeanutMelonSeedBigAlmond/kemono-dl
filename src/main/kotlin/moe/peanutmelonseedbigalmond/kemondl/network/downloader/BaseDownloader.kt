@@ -20,6 +20,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.net.URI
 import java.nio.charset.Charset
+import java.text.SimpleDateFormat
 import java.util.logging.Logger
 import kotlin.coroutines.CoroutineContext
 
@@ -27,6 +28,7 @@ abstract class BaseDownloader(
     coroutineContext: CoroutineContext
 ) : CoroutineScope by CoroutineScope(coroutineContext) {
     private val logger = ConsoleLoggerFormatter.installFormatter(Logger.getLogger(this::class.java.simpleName))
+    private val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH-mm-ss")
 
     init {
         Aria2ClientController.useSystemProxy = true
@@ -57,8 +59,10 @@ abstract class BaseDownloader(
         val username =
             creators!!.first { it.id == postContentResponse.userId && it.service == postContentResponse.site }.name
 
+        val timeDate = dateFormatter.format(postContentResponse.publishedTime)
+
         val dirName =
-            "${postContentResponse.site}/${filterInvalidChars(username)}/${filterInvalidChars(postContentResponse.title)}"
+            "${postContentResponse.site}/${filterInvalidChars(username)}/${filterInvalidChars("$timeDate ${postContentResponse.title}")}"
         val dir = File(dirName)
         if (!dir.exists()) dir.mkdirs()
 
